@@ -1,4 +1,4 @@
-import { Box, Image, Input, Text } from "@chakra-ui/react"
+import { Box, Button, Image, Input, ListItem, UnorderedList } from "@chakra-ui/react"
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
@@ -9,8 +9,9 @@ export const SearchMovies = () => {
     const [query, setQuery] = useState("")
     const [data, setData] = useState("")
 
+
     useEffect(() => {
-        axios.get(`https://www.omdbapi.com/?apikey=3f8a2d27&s=${query}`)
+        axios.get(`https://strategy-backend-xdzy.onrender.com/?q=${query}`)
             .then((res) => setData(res.data.Search))
             .catch((err) => console.log(err))
     }, [query])
@@ -18,26 +19,24 @@ export const SearchMovies = () => {
 
     return (
         <Box>
-            <Box w='30%' m='auto'>
+            <Box w='30%' m='auto' mt='50px'>
                 <Input placeholder="Search Movies" value={query} onChange={(e) => setQuery(e.target.value)} />
             </Box>
 
             {
-                data?.length && <Box w='80%' m='auto' display='grid' gridTemplateColumns='repeat(auto-fit,minmax(250px,1fr))' gridTemplateRows='auto' gap='20px' mt='20px' p='20px' textAlign='center'>
+                data?.length && <UnorderedList w='50%' m='auto' mt='100px'>
                     {
                         data.map((el, ind) => {
                             return (
-                                <Link to={`/${el.imdbID}`} key={ind}>
-                                    <Box key={ind} h='300px'>
-                                        <Image src={el.Poster} h='70%' w='100%' />
-                                        <Text>{el.Title}</Text>
-                                        <Text>{el.Year}</Text>
-                                    </Box>
-                                </Link>
+                                <ListItem display='flex' h='150px' alignItems='center' gap='5%' key={ind} mt='30px'>
+                                    <Box w='30%' h='100%'><Image src={el.Poster} h='100%' w='100%' /></Box>
+                                    <Box  w='30%' ><span>{el.Title}</span></Box>
+                                    <Box  w='30%' ><Button><Link to={`/${el.imdbID}`} mt='20px'>View full Details</Link></Button></Box>
+                                </ListItem>
                             )
                         })
                     }
-                </Box>
+                </UnorderedList>
             }
 
         </Box>

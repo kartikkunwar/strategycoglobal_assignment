@@ -9,7 +9,7 @@ export const SingleMovie=()=>{
     const [data,setData]=useState([])
 
     useEffect(()=>{
-        axios.get(`https://www.omdbapi.com/?apikey=3f8a2d27&i=${id}`)
+        axios.get(`https://strategy-backend-xdzy.onrender.com/${id}`)
         .then((res)=>setData(res.data))
     },[id])
     return(
