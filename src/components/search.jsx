@@ -2,29 +2,54 @@ import { Box, Button, Image, Input, ListItem, UnorderedList } from "@chakra-ui/r
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
+import { ClockLoader } from "react-spinners"
 
 
 
 export const SearchMovies = () => {
     const [query, setQuery] = useState("")
     const [data, setData] = useState("")
+    const [anim,setAmin]=useState(false)
 
 
     useEffect(() => {
-        axios.get(`https://strategy-backend-xdzy.onrender.com/?q=${query}`)
-            .then((res) => setData(res.data.Search))
+        setAmin(true)
+        if(query==""){
+            axios.get("https://strategy-backend-xdzy.onrender.com/")
+            .then((res) => {
+                setData(res.data.Search)
+                setAmin(false)
+            })
             .catch((err) => console.log(err))
+        }else{
+            axios.get(`https://strategy-backend-xdzy.onrender.com/?q=${query}`)
+            .then((res) => {
+                setData(res.data.Search)
+                setAmin(false)
+            })
+            .catch((err) => console.log(err))
+        }   
     }, [query])
 
 
     return (
-        <Box>
-            <Box w='30%' m='auto' mt='50px'>
+        <Box bgColor='black'>
+            
+            <Box w='30%' m='auto' color='white' pt='30px'>
                 <Input placeholder="Search Movies" value={query} onChange={(e) => setQuery(e.target.value)} />
             </Box>
+            {
+                anim&&<Box width='100%' h='100vh' display='flex' alignItems='center' justifyContent='center'><ClockLoader
+                color={'teal'}
+                loading={anim}
+                size={150}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              /></Box>
+            }
 
             {
-                data?.length && <UnorderedList w='50%' m='auto' mt='100px'>
+                !anim&&data?.length && <UnorderedList w='50%' m='auto' mt='100px' color='white'>
                     {
                         data.map((el, ind) => {
                             return (
